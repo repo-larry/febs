@@ -22,25 +22,14 @@ public class FebsSecurityConfigure extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private FebsUserDetailService userDetailService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-
-    @Bean
-    @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
-    /*
-     * @param: http
-     * @return: void
-     * @description:
-     * @date: 2022/9/18
-     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.requestMatchers()
@@ -54,6 +43,6 @@ public class FebsSecurityConfigure extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder);
     }
 }
