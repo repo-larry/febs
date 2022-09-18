@@ -43,6 +43,7 @@ bin/
 *.iml
 *.ipr
 rebel.xml
+Maven*
 
 ### NetBeans ###
 nbproject/private/
