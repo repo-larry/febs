@@ -3,6 +3,7 @@ package com.febs.auth.configure;
 import com.febs.auth.properties.FebsAuthProperties;
 import com.febs.auth.properties.FebsClientsProperties;
 import com.febs.auth.service.FebsUserDetailService;
+import com.febs.auth.translator.FebsWebResponseExceptionTranslator;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,8 @@ public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigu
     private PasswordEncoder passwordEncoder;
     @Autowired
     private FebsAuthProperties authProperties;
+    @Autowired
+    private FebsWebResponseExceptionTranslator exceptionTranslator;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -61,14 +64,6 @@ public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigu
         }
     }
 
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.tokenStore(tokenStore())
-                .userDetailsService(userDetailService)
-                .authenticationManager(authenticationManager)
-                .tokenServices(defaultTokenServices());
-    }
-
     @Bean
     public TokenStore tokenStore() {
         return new RedisTokenStore(redisConnectionFactory);
@@ -83,5 +78,15 @@ public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigu
         tokenServices.setAccessTokenValiditySeconds(authProperties.getAccessTokenValiditySeconds());
         tokenServices.setRefreshTokenValiditySeconds(authProperties.getRefreshTokenValiditySeconds());
         return tokenServices;
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+        endpoints.tokenStore(tokenStore())
+                .userDetailsService(userDetailService)
+                .authenticationManager(authenticationManager)
+                .tokenServices(defaultTokenServices())
+                .exceptionTranslator(exceptionTranslator);
     }
 }
