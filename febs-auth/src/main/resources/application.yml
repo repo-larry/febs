@@ -18,14 +18,14 @@ spring:
 
 eureka:
   instance:
-    # 向Eureka 服务端发送心跳的间隔时间
+    # 向 Eureka 服务端发送心跳的间隔时间
     lease-renewal-interval-in-seconds: 20
   client:
     register-with-eureka: true
     # 从Eureka 服务端获取注册的服务信息
     fetch-registry: true
     # 新实例信息的变化到Eureka服务端的间隔时间
-    instance-info-replication-interval-seconds: 30
+    instance-info-replication-interval-seconds: 10
     # 每3秒去Eureka服务端上获取服务并缓存
     registry-fetch-interval-seconds: 3
     serviceUrl:
