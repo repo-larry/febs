@@ -1,0 +1,24 @@
+server:
+  port: 8201
+
+spring:
+  application:
+    name: FEBS-Server-System
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 20
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    instance-info-replication-interval-seconds: 30
+    serviceUrl:
+      defaultZone: http://febs:123456@localhost:8001/register/eureka/
+
+security:
+  oauth2:
+    resource:
+      id: ${spring.application.name}
+      # 到认证服务器里校验当前请求头中的令牌是否为合法的令牌
+      # 通过当前令牌获取对应的用户信息
+      user-info-uri: http://localhost:8301/auth/user
