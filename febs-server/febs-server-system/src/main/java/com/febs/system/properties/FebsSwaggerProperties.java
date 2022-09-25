@@ -19,4 +19,8 @@ public class FebsSwaggerProperties {
     private String license;
     private String licenseUrl;
 
+    private String grantUrl;
+    private String name;
+    private String scope;
+
 }
