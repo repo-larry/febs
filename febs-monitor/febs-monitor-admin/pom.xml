@@ -3,33 +3,44 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>febs-cloud</artifactId>
         <groupId>com.febs</groupId>
+        <artifactId>febs-monitor</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../febs-cloud/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>febs-register</artifactId>
-    <name>FEBS-Register</name>
-    <description>FEBS-Cloud服务注册中心</description>
+    <artifactId>febs-monitor-admin</artifactId>
+    <name>Febs-Monitor-Admin</name>
+    <description>Febs-Monitor-Admin基于Spring Boot Admin搭建的监控程序</description>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- 替换为 jetty-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jetty</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-server</artifactId>
+            <version>2.1.6</version>
         </dependency>
         <dependency>
             <groupId>de.codecentric</groupId>
-            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <artifactId>spring-boot-admin-server-ui</artifactId>
             <version>2.1.6</version>
         </dependency>
     </dependencies>
@@ -42,5 +53,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

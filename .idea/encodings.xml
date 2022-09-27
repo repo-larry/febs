@@ -9,6 +9,10 @@
     <file url="file://$PROJECT_DIR$/febs-common/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/febs-gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/febs-gateway/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/febs-monitor/febs-monitor-admin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/febs-monitor/febs-monitor-admin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/febs-monitor/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/febs-monitor/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/febs-register/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/febs-register/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/febs-server/febs-server-system/src/main/java" charset="UTF-8" />
