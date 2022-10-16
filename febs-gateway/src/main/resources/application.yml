@@ -12,6 +12,23 @@ spring:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
   application:
     name: FEBS-Gateway
+  cloud:
+    gateway:
+      routes:
+        - id: FEBS-Auth
+          uri: lb://FEBS-Auth
+          predicates:
+            - Path=/auth/**
+        - id: FEBS-Server-System
+          uri: lb://FEBS-Server-System
+          predicates:
+            - Path=/system/**
+        - id: FEBS-Server-test
+          uri: lb://FEBS-Server-Test
+          predicates:
+            - Path=/test/**
+      default-filters:
+        - StripPrefix=1
 
 eureka:
   instance:
@@ -23,32 +40,6 @@ eureka:
     registry-fetch-interval-seconds: 3
     serviceUrl:
       defaultZone: http://febs:123456@localhost:8001/register/eureka/
-
-zuul:
-  SendErrorFilter:
-    error:
-      disable: true
-  routes:
-    auth:
-      path: /auth/**
-      serviceId: FEBS-Auth
-      sensitiveHeaders: "*"
-    system:
-      path: /system/**
-      serviceId: FEBS-Server-System
-      sensitiveHeaders: "*"
-    test:
-      path: /test/**
-      serviceId: FEBS-Server-Test
-      sensitiveHeaders: "*"
-  retryable: true
-  ignored-services: "*"
-  ribbon:
-    eager-load:
-      enabled: true
-
-ribbon:
-  ReadTimeout: 3000
 
 info:
   app:

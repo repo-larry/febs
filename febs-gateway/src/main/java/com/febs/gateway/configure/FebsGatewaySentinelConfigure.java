@@ -1,4 +1,4 @@
-package com.febs.gateway.filter;
+package com.febs.gateway.configure;
 
 import com.alibaba.csp.sentinel.adapter.gateway.common.SentinelGatewayConstants;
 import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiDefinition;
@@ -8,53 +8,55 @@ import com.alibaba.csp.sentinel.adapter.gateway.common.api.GatewayApiDefinitionM
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayParamFlowItem;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
-import com.alibaba.csp.sentinel.adapter.gateway.zuul.fallback.ZuulBlockFallbackManager;
-import com.alibaba.csp.sentinel.adapter.gateway.zuul.filters.SentinelZuulErrorFilter;
-import com.alibaba.csp.sentinel.adapter.gateway.zuul.filters.SentinelZuulPostFilter;
-import com.alibaba.csp.sentinel.adapter.gateway.zuul.filters.SentinelZuulPreFilter;
-import com.febs.gateway.fallback.FebsGatewayBlockFallbackProvider;
-import com.netflix.zuul.ZuulFilter;
-import lombok.extern.slf4j.Slf4j;
+import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
+import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.codec.ServerCodecConfigurer;
+import org.springframework.web.reactive.result.view.ViewResolver;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @description:
- * @date: 2022/9/18
+ * @date: 2022/10/16
  **/
-@Slf4j
 @Configuration
-public class FebsGatewaySentinelFilter {
+public class FebsGatewaySentinelConfigure {
+    private final List<ViewResolver> viewResolvers;
+    private final ServerCodecConfigurer serverCodecConfigurer;
 
-    @Bean
-    public ZuulFilter sentinelZuulPreFilter() {
-        return new SentinelZuulPreFilter();
+    public FebsGatewaySentinelConfigure(ObjectProvider<List<ViewResolver>> viewResolversProvider,
+                                        ServerCodecConfigurer serverCodecConfigurer) {
+        this.viewResolvers = viewResolversProvider.getIfAvailable(Collections::emptyList);
+        this.serverCodecConfigurer = serverCodecConfigurer;
     }
 
     @Bean
-    public ZuulFilter sentinelZuulPostFilter() {
-        return new SentinelZuulPostFilter();
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler() {
+        return new SentinelGatewayBlockExceptionHandler(viewResolvers, serverCodecConfigurer);
     }
 
     @Bean
-    public ZuulFilter sentinelZuulErrorFilter() {
-        return new SentinelZuulErrorFilter();
+    @Order(-1)
+    public GlobalFilter sentinelGatewayFilter() {
+        return new SentinelGatewayFilter();
     }
 
     @PostConstruct
     public void doInit() {
-        ZuulBlockFallbackManager.registerProvider(new FebsGatewayBlockFallbackProvider());
         initGatewayRules();
     }
 
-    /**
-     * 定义验证码请求限流，限流规则：
-     *  60秒内同一个IP，同一个 key最多访问 10次
-     */
     private void initGatewayRules() {
         Set<ApiDefinition> definitions = new HashSet<>();
         Set<ApiPredicateItem> predicateItems = new HashSet<>();
